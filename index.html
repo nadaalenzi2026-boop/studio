@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ستوديو 🎬</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap');
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,45,85,.5)}70%{box-shadow:0 0 0 20px rgba(255,45,85,0)}100%{box-shadow:0 0 0 0 rgba(255,45,85,0)}}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:'Tajawal',sans-serif;color:#fff;direction:rtl;}
+#app{position:relative;width:100vw;height:100dvh;overflow:hidden;background:#000;}
+#video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1);}
+.fov{position:absolute;inset:0;pointer-events:none;z-index:2;}
+.fw #video{filter:saturate(1.5)contrast(1.08)sepia(0.28)brightness(1.06);}
+.fc #video{filter:saturate(1.35)hue-rotate(22deg)brightness(1.06);}
+.fd #video{filter:contrast(1.55)saturate(0.75)brightness(0.8);}
+.fg #video{filter:saturate(1.8)contrast(1.15)brightness(1.12)hue-rotate(-12deg);}
+.fgo #video{filter:saturate(1.2)sepia(0.45)brightness(1.14)contrast(1.06);}
+.fnr #video{filter:grayscale(1)contrast(1.4)brightness(0.86);}
+.fp #video{filter:saturate(1.6)hue-rotate(-30deg)brightness(1.1);}
+.fv #video{filter:sepia(0.5)saturate(1.3)contrast(1.1)brightness(0.95);}
+.fne #video{filter:saturate(2.2)contrast(1.3)brightness(1.05)hue-rotate(15deg);}
+#prog{position:absolute;top:0;left:0;height:3px;width:0%;background:#ff2d55;box-shadow:0 0 8px #ff2d55;z-index:30;transition:width .5s linear;}
+.topbar{position:absolute;top:0;left:0;right:0;z-index:20;padding:48px 14px 18px;background:linear-gradient(to bottom,rgba(0,0,0,.75),transparent);display:flex;align-items:center;justify-content:space-between;}
+.logo{font-size:20px;font-weight:900;background:linear-gradient(90deg,#ff2d55,#00f5d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.ibtn{width:38px;height:38px;border-radius:50%;border:1.5px solid rgba(255,255,255,.15);background:rgba(255,255,255,.1);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+#recbar{position:absolute;top:52px;left:50%;transform:translateX(-50%);z-index:20;display:flex;align-items:center;gap:7px;opacity:0;transition:opacity .3s;}
+#recbar.on{opacity:1;}
+.rdot{width:9px;height:9px;border-radius:50%;background:#ff2d55;animation:blink 1s infinite;}
+#timertxt{font-size:14px;font-weight:700;letter-spacing:2px;}
+#mbar{position:absolute;top:94px;left:10px;right:10px;z-index:20;background:rgba(255,255,255,.09);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.13);border-radius:14px;padding:10px 13px;display:flex;align-items:center;gap:10px;cursor:pointer;}
+.mico{font-size:19px;flex-shrink:0;}
+.mico.spin{animation:spin 3s linear infinite;}
+.minfo{flex:1;min-width:0;}
+.mtit{font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.msub{font-size:10px;color:rgba(255,255,255,.5);margin-top:2px;}
+.mprog{width:100%;height:3px;background:rgba(255,255,255,.15);border-radius:99px;margin-top:7px;overflow:hidden;}
+.mprogf{height:100%;background:linear-gradient(90deg,#00f5d4,#ff2d55);border-radius:99px;width:0%;transition:width .4s linear;}
+#mtog{width:30px;height:30px;border-radius:50%;border:none;background:#ff2d55;color:#fff;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.sidebar{position:absolute;left:10px;bottom:170px;z-index:20;display:flex;flex-direction:column;gap:20px;align-items:center;}
+.sbtn{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;}
+.sico{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.09);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1.5px solid rgba(255,255,255,.13);display:flex;align-items:center;justify-content:center;font-size:19px;}
+.slbl{font-size:10px;font-weight:700;color:rgba(255,255,255,.8);}
+#fstrip{position:absolute;bottom:158px;left:0;right:0;z-index:20;opacity:0;transform:translateY(20px);transition:all .3s;pointer-events:none;}
+#fstrip.on{opacity:1;transform:translateY(0);pointer-events:all;}
+.fsrow{display:flex;gap:9px;padding:10px 12px;overflow-x:auto;flex-direction:row-reverse;-webkit-overflow-scrolling:touch;}
+.fchip{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;flex-shrink:0;}
+.fthumb{width:54px;height:54px;border-radius:12px;border:2.5px solid transparent;display:flex;align-items:center;justify-content:center;font-size:21px;transition:.2s;}
+.fchip.act .fthumb{border-color:#00f5d4;box-shadow:0 0 12px rgba(0,245,212,.5);}
+.flbl{font-size:9px;font-weight:700;color:rgba(255,255,255,.7);}
+.botbar{position:absolute;bottom:0;left:0;right:0;z-index:20;padding:14px 0 48px;display:flex;justify-content:center;align-items:center;gap:26px;background:linear-gradient(to top,rgba(0,0,0,.75),transparent);}
+#recbtn{width:76px;height:76px;border-radius:50%;border:4px solid #fff;background:#ff2d55;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+#recbtn::after{content:'';width:26px;height:26px;border-radius:50%;background:#fff;transition:.25s;}
+#recbtn.rec{animation:pulse 1.2s ease-out infinite;}
+#recbtn.rec::after{border-radius:6px;width:23px;height:23px;}
+.sact{width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.09);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1.5px solid rgba(255,255,255,.13);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;cursor:pointer;}
+#dim{position:absolute;inset:0;z-index:25;background:rgba(0,0,0,.6);opacity:0;pointer-events:none;transition:opacity .3s;}
+#dim.on{opacity:1;pointer-events:all;}
+#mpanel{position:absolute;bottom:0;left:0;right:0;z-index:30;background:rgba(8,8,18,.97);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-radius:24px 24px 0 0;border-top:1px solid rgba(255,255,255,.12);padding:14px 18px 52px;transform:translateY(100%);transition:transform .38s cubic-bezier(.4,0,.2,1);}
+#mpanel.open{transform:translateY(0);}
+.phandle{width:40px;height:4px;background:rgba(255,255,255,.2);border-radius:99px;margin:0 auto 16px;}
+.ptit{font-size:16px;font-weight:900;margin-bottom:14px;}
+#pclose{position:absolute;top:14px;left:16px;background:none;border:none;color:rgba(255,255,255,.45);font-size:22px;cursor:pointer;}
+.upzone{border:2px dashed rgba(255,255,255,.16);border-radius:14px;padding:22px;text-align:center;cursor:pointer;transition:.25s;}
+.upzone:active{border-color:#00f5d4;background:rgba(0,245,212,.05);}
+.upzone .uico{font-size:36px;}
+.upzone strong{display:block;font-size:14px;margin-top:8px;}
+.upzone p{font-size:11px;color:rgba(255,255,255,.4);margin-top:4px;}
+#fileInput{display:none;}
+#selBadge{display:none;align-items:center;gap:8px;background:rgba(0,245,212,.1);border:1px solid rgba(0,245,212,.3);border-radius:10px;padding:8px 12px;margin-top:12px;}
+#selBadge.on{display:flex;}
+#selBadge span{flex:1;font-size:12px;font-weight:700;}
+#toast{position:absolute;bottom:180px;left:50%;transform:translateX(-50%) translateY(10px);z-index:50;background:rgba(0,0,0,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.13);border-radius:12px;padding:9px 18px;font-size:12px;font-weight:700;white-space:nowrap;opacity:0;transition:all .3s;pointer-events:none;}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
+#permscreen{position:absolute;inset:0;z-index:40;background:#0a0a14;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:30px;}
+#permscreen .pico{font-size:60px;}
+#permscreen h2{font-size:20px;font-weight:900;text-align:center;}
+#permscreen p{font-size:13px;color:rgba(255,255,255,.55);text-align:center;line-height:1.7;}
+#permscreen button{padding:14px 36px;border-radius:14px;border:none;background:linear-gradient(135deg,#ff2d55,#ff6b8a);color:#fff;font-family:'Tajawal',sans-serif;font-weight:700;font-size:16px;cursor:pointer;width:100%;}
+</style>
+</head>
+<body>
+<div id="app">
+<div id="prog"></div>
+<video id="video" autoplay playsinline muted></video>
+<div class="fov" id="fov"></div>
+<div id="permscreen">
+<div class="pico">📷</div>
+<h2>ستوديو التصوير</h2>
+<p>اضغط الزر وسمح للمتصفح بالوصول للكاميرا والميكروفون</p>
+<button id="startBtn">🎬 ابدأ</button>
+</div>
+<div class="topbar">
+<div class="logo">🎬 ستوديو</div>
+<button class="ibtn" id="flipBtn">🔄</button>
+</div>
+<div id="recbar"><div class="rdot"></div><span id="timertxt">00:00</span></div>
+<div id="mbar">
+<span class="mico" id="mico">🎵</span>
+<div class="minfo">
+<div class="mtit" id="mtit">اضغط لإضافة أغنية</div>
+<div class="msub" id="msub">ستشتغل تلقائياً عند التصوير</div>
+<div class="mprog"><div class="mprogf" id="mprogf"></div></div>
+</div>
+<button id="mtog">▶</button>
+</div>
+<div class="sidebar">
+<div class="sbtn" id="filterBtn"><div class="sico">✨</div><div class="slbl">فلاتر</div></div>
+<div class="sbtn" id="musicBtn"><div class="sico">🎵</div><div class="slbl">موسيقى</div></div>
+</div>
+<div id="fstrip">
+<div class="fsrow">
+<div class="fchip act" data-f="" data-bg="" data-bm=""><div class="fthumb" style="background:#1a1a1a">🚫</div><div class="flbl">بدون</div></div>
+<div class="fchip" data-f="fw" data-bg="linear-gradient(160deg,rgba(255,100,0,.18),rgba(255,50,0,.1))" data-bm="multiply"><div class="fthumb" style="background:linear-gradient(135deg,#ff8c00,#ff4500)">🔥</div><div class="flbl">دافئ</div></div>
+<div class="fchip" data-f="fc" data-bg="linear-gradient(160deg,rgba(0,140,255,.18),rgba(0,220,200,.1))" data-bm="multiply"><div class="fthumb" style="background:linear-gradient(135deg,#0096ff,#00f0c8)">❄️</div><div class="flbl">بارد</div></div>
+<div class="fchip" data-f="fd" data-bg="radial-gradient(ellipse at center,transparent 20%,rgba(0,0,0,.78) 100%)" data-bm="normal"><div class="fthumb" style="background:radial-gradient(circle,#555,#000)">🎭</div><div class="flbl">درامي</div></div>
+<div class="fchip" data-f="fg" data-bg="linear-gradient(135deg,rgba(255,0,100,.2),rgba(150,0,255,.2))" data-bm="screen"><div class="fthumb" style="background:linear-gradient(135deg,#ff0080,#b400ff)">💅</div><div class="flbl">جلام</div></div>
+<div class="fchip" data-f="fgo" data-bg="linear-gradient(160deg,rgba(255,200,0,.25),rgba(255,120,0,.15))" data-bm="multiply"><div class="fthumb" style="background:linear-gradient(135deg,#ffd60a,#ff8c00)">✨</div><div class="flbl">ذهبي</div></div>
+<div class="fchip" data-f="fnr" data-bg="" data-bm="normal"><div class="fthumb" style="background:linear-gradient(135deg,#888,#222)">🖤</div><div class="flbl">أبيض وأسود</div></div>
+<div class="fchip" data-f="fp" data-bg="linear-gradient(135deg,rgba(255,100,180,.2),rgba(255,0,100,.15))" data-bm="screen"><div class="fthumb" style="background:linear-gradient(135deg,#ff80c0,#ff0060)">🌸</div><div class="flbl">وردي</div></div>
+<div class="fchip" data-f="fv" data-bg="linear-gradient(160deg,rgba(180,120,60,.2),rgba(100,60,30,.15))" data-bm="multiply"><div class="fthumb" style="background:linear-gradient(135deg,#c8a060,#806040)">📷</div><div class="flbl">كلاسيك</div></div>
+<div class="fchip" data-f="fne" data-bg="linear-gradient(135deg,rgba(0,255,180,.1),rgba(255,0,200,.1))" data-bm="screen"><div class="fthumb" style="background:linear-gradient(135deg,#00ffb4,#ff00cc)">🌈</div><div class="flbl">نيون</div></div>
+</div>
+</div>
+<div class="botbar">
+<div class="sact" id="speedBtn">1x</div>
+<button id="recbtn"></button>
+<div class="sact" id="flipBtn2">🔄</div>
+</div>
+<div id="dim"></div>
+<div id="mpanel">
+<button id="pclose">✕</button>
+<div class="phandle"></div>
+<div class="ptit">🎵 أضف أغنية</div>
+<div class="upzone" id="upzone">
+<div class="uico">📂</div>
+<strong>اضغط هنا لاختيار ملف صوتي</strong>
+<p>MP3 · WAV · M4A · OGG</p>
+<input type="file" id="fileInput" accept="audio/*">
+</div>
+<div id="selBadge"><span>✅</span><span id="selName"></span></div>
+</div>
+<div id="toast"></div>
+</div>
+<audio id="audioEl" loop></audio>
+<script>
+const $=id=>document.getElementById(id);
+const app=$('app'),video=$('video'),prog=$('prog');
+const recbar=$('recbar'),timertxt=$('timertxt');
+const mbar=$('mbar'),mico=$('mico'),mtit=$('mtit'),msub=$('msub'),mprogf=$('mprogf'),mtog=$('mtog');
+const filterBtn=$('filterBtn'),musicBtn=$('musicBtn'),fstrip=$('fstrip');
+const recbtn=$('recbtn'),speedBtn=$('speedBtn');
+const flipBtn=$('flipBtn'),flipBtn2=$('flipBtn2');
+const dim=$('dim'),mpanel=$('mpanel'),pclose=$('pclose');
+const upzone=$('upzone'),fileInput=$('fileInput');
+const selBadge=$('selBadge'),selName=$('selName');
+const fov=$('fov'),permscreen=$('permscreen'),startBtn=$('startBtn');
+const audioEl=$('audioEl'),toast=$('toast');
+let stream=null,facingMode='user',isRec=false,mediaRec=null,chunks=[];
+let timerInt=null,secs=0,musicLoaded=false,isPlaying=false;
+let filterOpen=false,speedIdx=2;
+const speeds=[0.5,0.75,1,1.5,2],speedLbls=['.5x','.75x','1x','1.5x','2x'];
+startBtn.addEventListener('click',async()=>{
+try{
+stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:1920},height:{ideal:1080}},audio:true});
+video.srcObject=stream;
+permscreen.style.display='none';
+showToast('✅ الكاميرا جاهزة!');
+}catch(e){
+showToast('❌ اذهب لإعدادات Safari ← الكاميرا ← اسمح');
+startBtn.textContent='حاول مرة ثانية 🔄';
+}
+});
+async function switchCam(){
+facingMode=facingMode==='user'?'environment':'user';
+video.style.transform=facingMode==='user'?'scaleX(-1)':'scaleX(1)';
+if(!stream)return;
+stream.getTracks().forEach(t=>t.stop());
+try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode,width:{ideal:1920},height:{ideal:1080}},audio:true});video.srcObject=stream;}
+catch(e){showToast('❌ تعذّر تبديل الكاميرا');}
+}
+flipBtn.addEventListener('click',switchCam);
+flipBtn2.addEventListener('click',switchCam);
+recbtn.addEventListener('click',()=>isRec?stopRec():startRec());
+function startRec(){
+if(!stream){showToast('⚠️ فعّل الكاميرا أولاً');return;}
+chunks=[];
+let mr;
+try{mr=new MediaRecorder(stream,{mimeType:'video/webm;codecs=vp9,opus'});}
+catch{try{mr=new MediaRecorder(stream,{mimeType:'video/mp4'});}catch{mr=new MediaRecorder(stream);}}
+mr.ondataavailable=e=>{if(e.data.size>0)chunks.push(e.data);};
+mr.onstop=saveVid;mr.start(100);
+mediaRec=mr;isRec=true;
+recbtn.classList.add('rec');recbar.classList.add('on');
+secs=0;updateTimer();timerInt=setInterval(updateTimer,1000);
+if(musicLoaded&&audioEl.paused){audioEl.play().catch(()=>{});setPlaying(true);}
+showToast('🔴 جاري التسجيل...');
+}
+function stopRec(){
+mediaRec?.stop();clearInterval(timerInt);isRec=false;
+recbtn.classList.remove('rec');recbar.classList.remove('on');
+prog.style.width='0%';
+if(!audioEl.paused){audioEl.pause();setPlaying(false);}
+showToast('✅ تم الحفظ! تحقق من التنزيلات');
+}
+function saveVid(){
+const blob=new Blob(chunks,{type:'video/webm'});
+const url=URL.createObjectURL(blob);
+const a=document.createElement('a');
+a.href=url;a.download=`studio_${Date.now()}.webm`;a.click();
+URL.revokeObjectURL(url);
+}
+function updateTimer(){
+secs++;
+const m=String(Math.floor(secs/60)).padStart(2,'0');
+const s=String(secs%60).padStart(2,'0');
+timertxt.textContent=`${m}:${s}`;
+prog.style.width=`${Math.min((secs/60)*100,100)}%`;
+if(secs>=60)stopRec();
+}
+filterBtn.addEventListener('click',()=>{filterOpen=!filterOpen;fstrip.classList.toggle('on',filterOpen);});
+document.querySelectorAll('.fchip').forEach(chip=>{
+chip.addEventListener('click',()=>{
+document.querySelectorAll('.fchip').forEach(c=>c.classList.remove('act'));
+chip.classList.add('act');
+const f=chip.dataset.f,bg=chip.dataset.bg,bm=chip.dataset.bm;
+app.className=app.className.replace(/\b(fw|fc|fd|fg|fgo|fnr|fp|fv|fne)\b/g,'').trim();
+if(f)app.classList.add(f);
+fov.style.background=bg||'';fov.style.mixBlendMode=bm||'normal';
+});
+});
+musicBtn.addEventListener('click',openPanel);
+mbar.addEventListener('click',e=>{if(e.target!==mtog&&!musicLoaded)openPanel();});
+dim.addEventListener('click',closePanel);pclose.addEventListener('click',closePanel);
+function openPanel(){mpanel.classList.add('open');dim.classList.add('on');}
+function closePanel(){mpanel.classList.remove('open');dim.classList.remove('on');}
+upzone.addEventListener('click',()=>fileInput.click());
+fileInput.addEventListener('change',e=>{
+const f=e.target.files[0];if(!f)return;
+const name=f.name.replace(/\.[^.]+$/,'');
+audioEl.src=URL.createObjectURL(f);audioEl.load();
+audioEl.onerror=()=>showToast('❌ تعذّر تحميل الملف');
+audioEl.oncanplay=()=>{
+musicLoaded=true;mtit.textContent=name;msub.textContent='جاهز ← سيشتغل عند التصوير';
+selName.textContent=name;selBadge.classList.add('on');closePanel();
+showToast('🎵 تم تحميل: '+name);audioEl.play().catch(()=>{});setPlaying(true);
+};
+});
+mtog.addEventListener('click',e=>{
+e.stopPropagation();
+if(!musicLoaded){openPanel();return;}
+if(audioEl.paused){audioEl.play().catch(()=>{});setPlaying(true);}
+else{audioEl.pause();setPlaying(false);}
+});
+function setPlaying(v){isPlaying=v;mtog.textContent=v?'⏸':'▶';v?mico.classList.add('spin'):mico.classList.remove('spin');}
+audioEl.addEventListener('timeupdate',()=>{
+if(!audioEl.duration)return;
+mprogf.style.width=`${(audioEl.currentTime/audioEl.duration)*100}%`;
+if(!isRec){const m=Math.floor(audioEl.currentTime/60),s=Math.floor(audioEl.currentTime%60);msub.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;}
+});
+speedBtn.addEventListener('click',()=>{speedIdx=(speedIdx+1)%speeds.length;audioEl.playbackRate=speeds[speedIdx];speedBtn.textContent=speedLbls[speedIdx];showToast(`⚡ سرعة ${speedLbls[speedIdx]}`);});
+let toastT;
+function showToast(msg){toast.textContent=msg;toast.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>toast.classList.remove('on'),2800);}
+</script>
+</body>
+</html>
